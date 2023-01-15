@@ -53,7 +53,7 @@ await Task.Run(async () => {
 		if (message.PostType == "message" && message.MessageType == "group" && message.RawMessage!.Contains($"[CQ:at,qq={message.SelfId}]")) {
 			await ws.SendAsync(JsonSerializer.SerializeToUtf8Bytes(new SendMessage() { Action = "Message", Params = new() { GroupId = message.GroupId, Message = $"[CQ:reply,id={message.MessageId}] [CQ:at,qq={message.UserId}] 你好！" } }), WebSocketMessageType.Text, true, CancellationToken.None);
 		}
-		
+
 	}
 });
 
@@ -122,7 +122,7 @@ namespace Struct {
 		public long? SelfId { get; set; }
 	}
 
-	
+
 	public struct SendMessage {
 		[JsonPropertyName("action")]
 		public string Action { get; set; }
@@ -134,7 +134,7 @@ namespace Struct {
 		public string? Echo { get; set; }
 	}
 
-	
+
 	public struct SendMessageParams {
 		[JsonPropertyName("group_id")]
 		public long? GroupId { get; set; }
