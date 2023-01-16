@@ -57,7 +57,7 @@ await Task.Run(async () => {
 				await ws.SendAsync(JsonSerializer.SerializeToUtf8Bytes(new SendMessage() { Action = "send_msg", Params = new() { UserId = message.UserId, Message = $"[CQ:reply,id={message.MessageId}]你好！" } }), WebSocketMessageType.Text, true, CancellationToken.None);
 			}
 		}
-		
+
 	}
 });
 
@@ -126,7 +126,7 @@ namespace Struct {
 		public long? SelfId { get; set; }
 	}
 
-	
+
 	public struct SendMessage {
 		[JsonPropertyName("action")]
 		public string Action { get; set; }
@@ -138,7 +138,7 @@ namespace Struct {
 		public string? Echo { get; set; }
 	}
 
-	
+
 	public struct SendMessageParams {
 		[JsonPropertyName("group_id")]
 		public long? GroupId { get; set; }
