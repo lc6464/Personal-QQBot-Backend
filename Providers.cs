@@ -20,11 +20,11 @@ public static class CacheProvider {
 		if (slidingExpiration is null) {
 			return cache.Set(key, value);
 		}
-		
+
 		using var entry = cache.CreateEntry(key);
 		entry.SlidingExpiration = slidingExpiration;
 		entry.Value = value;
-		
+
 		return value;
 	}
 }

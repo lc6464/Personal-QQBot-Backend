@@ -99,7 +99,7 @@ public static class Processer {
 							};
 						}
 					}
-					
+
 					if (sendMessage is not null) {
 						lock (sendMessagesPool) {
 							sendMessagesPool.Add(sendMessage!.Value);
