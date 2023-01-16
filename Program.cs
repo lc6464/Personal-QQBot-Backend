@@ -7,7 +7,7 @@ var uriString = config.GetValue<string>("Connection:Uri");
 
 if (uriString is null) {
 	Console.Error.WriteLine("未找到配置文件中的 Connection:Uri 项。");
-	Environment.Exit(2);
+	Environment.Exit(2); // skipcq: CS-W1005
 }
 
 Console.WriteLine("正在连接至 WebSocket 服务器。");
@@ -23,7 +23,7 @@ try {
 } catch (Exception e) {
 	Console.Error.WriteLine("连接 WebSocket 服务器失败。");
 	Console.Error.WriteLine(e);
-	Environment.Exit(1);
+	Environment.Exit(1); // skipcq: CS-W1005
 }
 
 
@@ -43,7 +43,7 @@ Task.Run(async () => {
 					Console.Error.WriteLine("连接 WebSocket 服务器失败。");
 				}
 			}*/
-			Environment.Exit(2);
+			Environment.Exit(2); // skipcq: CS-W1005
 		}
 
 
