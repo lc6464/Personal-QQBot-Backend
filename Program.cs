@@ -63,7 +63,7 @@ Task.Run(async () => {
 
 System.Timers.Timer timer = new() { AutoReset = true, Interval = 10000 };
 timer.Elapsed += (object? sender, System.Timers.ElapsedEventArgs e) => {
-	int count;
+	var count = 0;
 	lock (Processer.sendMessagesPool) {
 		count = Processer.sendMessagesPool.Count;
 	}

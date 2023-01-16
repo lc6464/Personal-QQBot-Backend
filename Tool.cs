@@ -41,9 +41,9 @@ public static class Tools {
 	public static string NextString(this Random random, int length, string chars) =>
 		new(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
 
-	public static async Task<BiliApiSpaceInfo> GetBiliApiUserSpaceInfo(long uid) =>
+	public static async Task<BiliApiSpaceInfo> GetBiliApiUserSpaceInfoAsync(long uid) =>
 		await HttpClientProvider.client.GetFromJsonAsync<BiliApiSpaceInfo>($"https://api.bilibili.com/x/space/acc/info?mid={uid}").ConfigureAwait(false);
 
-	public static async Task<BiliApiUploaderVideosInfo> GetBiliApiUploaderVideosInfo(long uid, int pageNumber = 1, int pageSize = 1) =>
+	public static async Task<BiliApiUploaderVideosInfo> GetBiliApiUploaderVideosInfoAsync(long uid, int pageNumber = 1, int pageSize = 1) =>
 		await HttpClientProvider.client.GetFromJsonAsync<BiliApiUploaderVideosInfo>($"https://api.bilibili.com/x/space/arc/search?mid={uid}&ps={pageSize}&pn={pageNumber}").ConfigureAwait(false);
 }

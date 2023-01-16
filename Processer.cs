@@ -7,11 +7,11 @@ public static class Processer {
 
 	public static async Task ProcessReceivedMessageMessageAsync(ClientWebSocket ws, ReceivedMessage message) {
 		if (message.PostType == "message") {
-			if (((message.MessageType == "group" && message.SubType != "anonymous") || (message.MessageType == "private" && message.SubType == "friend")) && message.RawMessage!.Contains($"查询阿梨")) {
+			if (((message.MessageType == "group" && message.SubType != "anonymous") || (message.MessageType == "private" && message.SubType == "friend")) && message.RawMessage!.Contains("查询阿梨")) {
 				if (message.MessageType == "group" && message.SubType != "anonymous") {
 					SendMessage? sendMessage = null;
 					if (message.RawMessage.Contains("查询阿梨最新稿件")) {
-						if (message.UserId == 1138779174 && message.RawMessage.Contains("清除缓存")) {
+						if (message.UserId == 1138_7791_74 && message.RawMessage.Contains("清除缓存")) {
 							CacheProvider.cache.Remove("阿梨最新稿件");
 							CacheProvider.cache.Remove("更新阿梨最新稿件信息时间");
 							sendMessage = new() {
@@ -26,7 +26,7 @@ public static class Processer {
 							try {
 								DateTime updateInfoTime;
 								if (!CacheProvider.cache.TryGetValue<BiliApiUploaderVideosInfo>("阿梨最新稿件", out var info)) {
-									info = await Tools.GetBiliApiUploaderVideosInfo(327263639).ConfigureAwait(false);
+									info = await Tools.GetBiliApiUploaderVideosInfoAsync(327263639).ConfigureAwait(false);
 									updateInfoTime = DateTime.Now;
 									CacheProvider.cache.Set("阿梨最新稿件", info, TimeSpan.FromMinutes(10));
 									CacheProvider.cache.Set("更新阿梨最新稿件信息时间", updateInfoTime, TimeSpan.FromMinutes(10));
@@ -58,7 +58,7 @@ public static class Processer {
 									};
 								}
 							} catch (Exception e) {
-								Console.Error.WriteLine($"获取阿梨最新稿件信息错误：");
+								Console.Error.WriteLine("获取阿梨最新稿件信息错误：");
 								Console.Error.WriteLine(e);
 								sendMessage = new() {
 									Action = "send_msg",
@@ -71,7 +71,7 @@ public static class Processer {
 							}
 						}
 					} else if (message.RawMessage.Contains("查询阿梨直播状态")) {
-						if (message.UserId == 1138779174 && message.RawMessage.Contains("清除缓存")) {
+						if (message.UserId == 1138_7791_74 && message.RawMessage.Contains("清除缓存")) {
 							CacheProvider.cache.Remove("阿梨直播状态");
 							CacheProvider.cache.Remove("更新阿梨直播状态信息时间");
 							sendMessage = new() {
@@ -86,7 +86,7 @@ public static class Processer {
 							try {
 								DateTime updateInfoTime;
 								if (!CacheProvider.cache.TryGetValue<BiliApiSpaceInfo>("阿梨直播状态", out var info)) {
-									info = await Tools.GetBiliApiUserSpaceInfo(327263639).ConfigureAwait(false);
+									info = await Tools.GetBiliApiUserSpaceInfoAsync(327263639).ConfigureAwait(false);
 									updateInfoTime = DateTime.Now;
 									CacheProvider.cache.Set("阿梨直播状态", info, TimeSpan.FromMinutes(10));
 									CacheProvider.cache.Set("更新阿梨直播状态信息时间", updateInfoTime, TimeSpan.FromMinutes(10));
@@ -118,7 +118,7 @@ public static class Processer {
 									};
 								}
 							} catch (Exception e) {
-								Console.Error.WriteLine($"获取阿梨直播状态信息错误：");
+								Console.Error.WriteLine("获取阿梨直播状态信息错误：");
 								Console.Error.WriteLine(e);
 								sendMessage = new() {
 									Action = "send_msg",
@@ -141,7 +141,7 @@ public static class Processer {
 				} else if (message.MessageType == "private" && message.SubType == "friend") {
 					SendMessage? sendMessage = null;
 					if (message.RawMessage.Contains("查询阿梨最新稿件")) {
-						if (message.UserId == 1138779174 && message.RawMessage.Contains("清除缓存")) {
+						if (message.UserId == 1138_7791_74 && message.RawMessage.Contains("清除缓存")) {
 							CacheProvider.cache.Remove("阿梨最新稿件");
 							CacheProvider.cache.Remove("更新阿梨最新稿件信息时间");
 							sendMessage = new() {
@@ -156,7 +156,7 @@ public static class Processer {
 							try {
 								DateTime updateInfoTime;
 								if (!CacheProvider.cache.TryGetValue<BiliApiUploaderVideosInfo>("阿梨最新稿件", out var info)) {
-									info = await Tools.GetBiliApiUploaderVideosInfo(327263639).ConfigureAwait(false);
+									info = await Tools.GetBiliApiUploaderVideosInfoAsync(327263639).ConfigureAwait(false);
 									updateInfoTime = DateTime.Now;
 									CacheProvider.cache.Set("阿梨最新稿件", info, TimeSpan.FromMinutes(10));
 									CacheProvider.cache.Set("更新阿梨最新稿件信息时间", updateInfoTime, TimeSpan.FromMinutes(10));
@@ -188,7 +188,7 @@ public static class Processer {
 									};
 								}
 							} catch (Exception e) {
-								Console.Error.WriteLine($"获取阿梨最新稿件信息错误：");
+								Console.Error.WriteLine("获取阿梨最新稿件信息错误：");
 								Console.Error.WriteLine(e);
 								sendMessage = new() {
 									Action = "send_msg",
@@ -201,7 +201,7 @@ public static class Processer {
 							}
 						}
 					} else if (message.RawMessage.Contains("查询阿梨直播状态")) {
-						if (message.UserId == 1138779174 && message.RawMessage.Contains("清除缓存")) {
+						if (message.UserId == 1138_7791_74 && message.RawMessage.Contains("清除缓存")) {
 							CacheProvider.cache.Remove("阿梨直播状态");
 							CacheProvider.cache.Remove("更新阿梨直播状态信息时间");
 							sendMessage = new() {
@@ -216,7 +216,7 @@ public static class Processer {
 							try {
 								DateTime updateInfoTime;
 								if (!CacheProvider.cache.TryGetValue<BiliApiSpaceInfo>("阿梨直播状态", out var info)) {
-									info = await Tools.GetBiliApiUserSpaceInfo(327263639).ConfigureAwait(false);
+									info = await Tools.GetBiliApiUserSpaceInfoAsync(327263639).ConfigureAwait(false);
 									updateInfoTime = DateTime.Now;
 									CacheProvider.cache.Set("阿梨直播状态", info, TimeSpan.FromMinutes(10));
 									CacheProvider.cache.Set("更新阿梨直播状态信息时间", updateInfoTime, TimeSpan.FromMinutes(10));
@@ -248,7 +248,7 @@ public static class Processer {
 									};
 								}
 							} catch (Exception e) {
-								Console.Error.WriteLine($"获取阿梨直播状态信息错误：");
+								Console.Error.WriteLine("获取阿梨直播状态信息错误：");
 								Console.Error.WriteLine(e);
 								sendMessage = new() {
 									Action = "send_msg",
@@ -315,7 +315,7 @@ public static class Processer {
 					Action = "send_msg",
 					Params = new() {
 						UserId = message.UserId,
-						Message = $"你好！"
+						Message = "你好！"
 					},
 					Echo = $"{DateTime.Now.Ticks}-{message.UserId}-{Random.Shared.NextString(16)}"
 				};
