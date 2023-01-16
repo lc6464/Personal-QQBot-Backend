@@ -60,32 +60,26 @@ Task.Run(async () => {
 
 
 
-/*
-System.Timers.Timer timer = new() { AutoReset = true, Interval = 5000 };
-timer.Elapsed += async (object? sender, ElapsedEventArgs e) => {
-	try {
-		var hello = await HttpClientProvider.client.GetFromJsonAsync<LCApiHello>("https://api.lcwebsite.cn/Hello").ConfigureAwait(false);
-		if (hello.Time.Second % 3 == 0) {
-			SendMessage sendMessage = new() {
-				Action = "send_msg",
-				Params = new() {
-					UserId = 1138779174,
-					Message = $"太巧了，从 LC API 获取到的时间的秒数是 3 的倍数！"
-				},
-				Echo = $"{DateTime.Now.Ticks}-1138779174-{Random.Shared.NextString(16)}"
-			};
-			lock (sendMessagesPool) {
-				sendMessagesPool.Add(sendMessage);
-			}
-			await ws.SendAsync(JsonSerializer.SerializeToUtf8Bytes(sendMessage), WebSocketMessageType.Text, true, CancellationToken.None).ConfigureAwait(false);
+
+System.Timers.Timer timer = new() { AutoReset = true, Interval = 10000 };
+timer.Elapsed += (object? sender, System.Timers.ElapsedEventArgs e) => {
+	int count;
+	lock (Processer.sendMessagesPool) {
+		count = Processer.sendMessagesPool.Count;
+	}
+	if (count != 0) {
+		Console.WriteLine($"消息池剩余消息数：{count}");
+		Thread.Sleep(200);
+		lock (Processer.sendMessagesPool) {
+			count = Processer.sendMessagesPool.Count;
 		}
-	} catch (Exception exception) {
-		Console.Error.WriteLine("在请求 LC API 并发送消息时出错。");
-		Console.WriteLine(exception);
+		if (count != 0) {
+			Console.WriteLine($"消息池剩余消息数：{count}，其中的一些消息很可能没有被处理！");
+		}
 	}
 };
 timer.Start();
-*/
+
 
 
 
