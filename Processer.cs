@@ -41,7 +41,7 @@ public static class Processer {
 											Message = $"[CQ:reply,id={message.MessageId}] [CQ:at,qq={message.UserId}]阿梨最新稿件：\n" +
 											$"标题：{info.Data?.List.VList[0].Title}\n" +
 											$"地址：https://www.bilibili.com/video/av{info.Data?.List.VList[0].Aid}\n" +
-											$"发布时间：{DateTimeOffset.FromUnixTimeSeconds(info.Data?.List.VList[0].Created ?? 0):yyyy-M-d H:mm:ss}\n\n" +
+											$"发布时间：{DateTimeOffset.FromUnixTimeSeconds(info.Data?.List.VList[0].Created ?? 0).LocalDateTime:yyyy-M-d H:mm:ss}\n\n" +
 											$"数据更新时间：{updateInfoTime}"
 										},
 										Echo = $"{DateTime.Now.Ticks}-{message.GroupId}-{message.UserId}-{message.MessageId}-{Random.Shared.NextString(16)}"
@@ -171,7 +171,7 @@ public static class Processer {
 											Message = $"[CQ:reply,id={message.MessageId}]阿梨最新稿件：\n" +
 											$"标题：{info.Data?.List.VList[0].Title}\n" +
 											$"地址：https://www.bilibili.com/video/av{info.Data?.List.VList[0].Aid}\n" +
-											$"发布时间：{DateTimeOffset.FromUnixTimeSeconds(info.Data?.List.VList[0].Created ?? 0):yyyy-M-d H:mm:ss}\n\n" +
+											$"发布时间：{DateTimeOffset.FromUnixTimeSeconds(info.Data?.List.VList[0].Created ?? 0).LocalDateTime:yyyy-M-d H:mm:ss}\n\n" +
 											$"数据更新时间：{updateInfoTime}"
 										},
 										Echo = $"{DateTime.Now.Ticks}-{message.UserId}-{message.MessageId}-{Random.Shared.NextString(16)}"
