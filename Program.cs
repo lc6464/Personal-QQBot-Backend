@@ -48,10 +48,14 @@ await Task.Run(async () => {
 
 
 		var message = JsonSerializer.Deserialize<ReceivedMessage>(buffer.AsSpan(..result.Count));
-		Console.WriteLine($"接收到事件：{JsonSerializer.Serialize(message)}");
+		Console.WriteLine($"接收到事件：{Encoding.UTF8.GetString(buffer.AsSpan(..result.Count))}");
 
-		if (message.PostType == "message" && message.MessageType == "group" && message.RawMessage!.Contains($"[CQ:at,qq={message.SelfId}]")) {
-			await ws.SendAsync(JsonSerializer.SerializeToUtf8Bytes(new SendMessage() { Action = "Message", Params = new() { GroupId = message.GroupId, Message = $"[CQ:reply,id={message.MessageId}] [CQ:at,qq={message.UserId}] 你好！" } }), WebSocketMessageType.Text, true, CancellationToken.None);
+		if (message.PostType == "message") {
+			if (message.MessageType == "group" && message.RawMessage!.Contains($"[CQ:at,qq={message.SelfId}]")) {
+				await ws.SendAsync(JsonSerializer.SerializeToUtf8Bytes(new SendMessage() { Action = "send_msg", Params = new() { GroupId = message.GroupId, Message = $"[CQ:reply,id={message.MessageId}] [CQ:at,qq={message.UserId}]你好！" } }), WebSocketMessageType.Text, true, CancellationToken.None);
+			} else if (message.MessageType == "private") {
+				await ws.SendAsync(JsonSerializer.SerializeToUtf8Bytes(new SendMessage() { Action = "send_msg", Params = new() { UserId = message.UserId, Message = $"[CQ:reply,id={message.MessageId}]你好！" } }), WebSocketMessageType.Text, true, CancellationToken.None);
+			}
 		}
 		
 	}
