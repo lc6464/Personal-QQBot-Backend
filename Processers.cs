@@ -11,7 +11,7 @@ public static class Processers {
 		if (message.PostType == "message") {
 			var aLiQueryRegexMatch = Regexes.ALiQueryRegex().Match(message.RawMessage!); // 获取阿梨相关查询功能的 Match
 			if (((message.MessageType == "group" && message.SubType != "anonymous") || (message.MessageType == "private" && message.SubType == "friend")) && aLiQueryRegexMatch.Success) {
-				SendMessageParams sendMessageParams;
+				SendMessageParams sendMessageParams = default;
 				string echo;
 
 				if (message.UserId == 1138_7791_74 && message.RawMessage!.Contains("清除缓存")) { // 清除缓存
