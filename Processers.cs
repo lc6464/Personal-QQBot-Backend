@@ -7,7 +7,7 @@ public static class Processers {
 
 	public static readonly List<SendMessage> sendMessagesPool = new();
 
-	public static async Task ProcessReceivedMessageMessageAsync(ReceivedMessage message) {
+	public static async Task ProcessReceivedMessageAsync(ReceivedMessage message) {
 		if (message.PostType == "message") {
 			var aLiQueryRegexMatch = Regexes.ALiQueryRegex().Match(message.RawMessage!); // 获取阿梨相关查询功能的 Match
 			if (((message.MessageType == "group" && message.SubType != "anonymous") || (message.MessageType == "private" && message.SubType == "friend")) && aLiQueryRegexMatch.Success) {

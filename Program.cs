@@ -49,7 +49,7 @@ Task.Run(async () => {
 
 		var message = JsonSerializer.Deserialize<ReceivedMessage>(buffer.AsSpan(..result.Count));
 
-		await Processers.ProcessReceivedMessageMessageAsync(message).ConfigureAwait(false);
+		await Processers.ProcessReceivedMessageAsync(message).ConfigureAwait(false);
 	}
 });
 
