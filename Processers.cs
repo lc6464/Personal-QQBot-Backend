@@ -13,7 +13,7 @@ public static class Processers {
 			if (((message.MessageType == "group" && message.SubType != "anonymous") || (message.MessageType == "private" && message.SubType == "friend")) && aLiQueryRegexMatch.Success) {
 				SendMessageParams sendMessageParams;
 				string echo;
-				
+
 				if (message.UserId == 1138_7791_74 && message.RawMessage!.Contains("清除缓存")) { // 清除缓存
 					CacheProvider.cache.Remove($"阿梨{aLiQueryRegexMatch.Groups[1].Value}");
 					CacheProvider.cache.Remove($"更新阿梨{aLiQueryRegexMatch.Groups[1].Value}信息时间");
@@ -125,7 +125,7 @@ public static class Processers {
 							? $"{DateTime.Now.Ticks}-{message.GroupId}-{message.UserId}-{message.MessageId}-{Random.Shared.NextString(16)}"
 							: $"{DateTime.Now.Ticks}-{message.UserId}-{message.MessageId}-{Random.Shared.NextString(16)}";
 					}
-					
+
 				}
 
 				SendMessage sendMessage = new() {
