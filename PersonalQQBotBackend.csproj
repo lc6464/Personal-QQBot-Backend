@@ -14,7 +14,9 @@
 		<Using Include="PersonalQQBotBackend" />
 		<Using Include="PersonalQQBotBackend.Tool" />
 		<Using Include="PersonalQQBotBackend.Struct" />
-		<Using Include="PersonalQQBotBackend.Providers" />
+		<Using Include="PersonalQQBotBackend.Provider" />
+		<Using Include="PersonalQQBotBackend.Processer" />
+		<Using Include="PersonalQQBotBackend.GeneratedRegex" />
 		<Using Include="System.Text" />
 		<Using Include="System.Text.Json" />
 		<Using Include="System.Text.Json.Serialization" />
