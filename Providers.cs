@@ -37,7 +37,7 @@ public static class WebSocketProvider {
 
 	public static async Task SendTextAsync(ArraySegment<byte> buffer, bool endOfMessage = true) =>
 		await WebSocket.SendAsync(buffer, WebSocketMessageType.Text, endOfMessage, CancellationToken.None).ConfigureAwait(false);
-	
+
 	public static async ValueTask SendTextAsync(ReadOnlyMemory<byte> buffer, bool endOfMessage = true) =>
 		await WebSocket.SendAsync(buffer, WebSocketMessageType.Text, endOfMessage, CancellationToken.None).ConfigureAwait(false);
 }
