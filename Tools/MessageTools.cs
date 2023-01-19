@@ -1,7 +1,7 @@
 ﻿namespace PersonalQQBotBackend.Tools;
 
 public static class MessageTools {
-	public static async Task SendSendMessage(SendMessage message) {
+	public static async Task SendSendMessageAsync(SendMessage message) {
 		lock (MainProcesser.sendMessagesPool) {
 			MainProcesser.sendMessagesPool.Add(message);
 		}

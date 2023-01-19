@@ -98,6 +98,7 @@ await Host.RunAsync();
 
 
 
+// skipcq: CS-W1061
 public partial class Program {
 	public static IHost? Host { get; private set; }
 }

@@ -14,7 +14,7 @@ public static class MainProcesser {
 			if ((message.MessageType == "group" && message.SubType != "anonymous" || message.MessageType == "private" && message.SubType == "friend") && aLiQueryRegexMatch.Success) {
 				// 如果是群消息且不是匿名消息，或者是私聊消息且是好友消息，且匹配到了阿梨相关查询功能的正则表达式
 				_logger.LogWithTime($"{message.GroupId} {message.UserId} 命中阿梨相关查询功能：{message.RawMessage}", LogLevel.Debug);
-				await ALiQueryProcesser.Process(message, aLiQueryRegexMatch).ConfigureAwait(false);
+				await ALiQueryProcesser.ProcessAsync(message, aLiQueryRegexMatch).ConfigureAwait(false);
 			} else if (message.MessageType == "group" && message.RawMessage!.Contains($"[CQ:at,qq={message.SelfId}]") && message.SubType != "anonymous") {
 				_logger.LogWithTime($"{message.GroupId} {message.UserId} 命中群聊 At：{message.RawMessage}", LogLevel.Debug);
 				SendMessage sendMessage = new() {
@@ -25,7 +25,7 @@ public static class MainProcesser {
 					},
 					Echo = $"{DateTime.Now.Ticks}-{message.GroupId}-{message.UserId}-{message.MessageId}-{Random.Shared.NextString(16)}"
 				};
-				await MessageTools.SendSendMessage(sendMessage).ConfigureAwait(false);
+				await MessageTools.SendSendMessageAsync(sendMessage).ConfigureAwait(false);
 			} else if (message.MessageType == "private" && message.SubType == "friend") {
 				_logger.LogWithTime($"{message.UserId} 命中好友私聊：{message.RawMessage}", LogLevel.Debug);
 				SendMessage sendMessage = new() {
@@ -36,7 +36,7 @@ public static class MainProcesser {
 					},
 					Echo = $"{DateTime.Now.Ticks}-{message.UserId}-{message.MessageId}-{Random.Shared.NextString(16)}"
 				};
-				await MessageTools.SendSendMessage(sendMessage).ConfigureAwait(false);
+				await MessageTools.SendSendMessageAsync(sendMessage).ConfigureAwait(false);
 			}
 		} else if (message.PostType == "notice" && message.SubType == "poke" && message.TargetId == message.SelfId && message.UserId != message.SelfId) {
 			_logger.LogWithTime($"{message.GroupId} {message.UserId} 命中戳一戳。", LogLevel.Debug);
@@ -53,7 +53,7 @@ public static class MainProcesser {
 					? $"{DateTime.Now.Ticks}-{message.GroupId}-{message.UserId}-{Random.Shared.NextString(16)}"
 					: $"{DateTime.Now.Ticks}-{message.UserId}-{Random.Shared.NextString(16)}"
 			};
-			await MessageTools.SendSendMessage(sendMessage).ConfigureAwait(false);
+			await MessageTools.SendSendMessageAsync(sendMessage).ConfigureAwait(false);
 		} else if (!string.IsNullOrWhiteSpace(message.Echo)) {
 			EchoProcesser.Process(message);
 		}

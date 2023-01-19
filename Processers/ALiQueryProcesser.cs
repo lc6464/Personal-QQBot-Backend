@@ -6,8 +6,8 @@ namespace PersonalQQBotBackend.Processers;
 public static class ALiQueryProcesser {
 	private static readonly ILogger _logger = LoggerProvider.logger;
 
-	public static async Task Process(ReceivedMessage message, Match aLiQueryRegexMatch) {
-		string echo;
+	public static async Task ProcessAsync(ReceivedMessage message, Match aLiQueryRegexMatch) {
+		string echo; // skipcq: CS-W1022
 		SendMessageParams sendMessageParams;
 
 		if (message.UserId == 1138_7791_74 && message.RawMessage!.Contains("清除缓存")) { // 清除缓存
@@ -127,6 +127,6 @@ public static class ALiQueryProcesser {
 			Params = sendMessageParams,
 			Echo = echo
 		};
-		await MessageTools.SendSendMessage(sendMessage).ConfigureAwait(false);
+		await MessageTools.SendSendMessageAsync(sendMessage).ConfigureAwait(false);
 	}
 }
