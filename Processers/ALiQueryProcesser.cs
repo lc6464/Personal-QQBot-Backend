@@ -5,7 +5,7 @@ namespace PersonalQQBotBackend.Processers;
 
 public static class ALiQueryProcesser {
 	private static readonly ILogger _logger = LoggerProvider.logger;
-	
+
 	public static async Task Process(ReceivedMessage message, Match aLiQueryRegexMatch) {
 		string echo;
 		SendMessageParams sendMessageParams;

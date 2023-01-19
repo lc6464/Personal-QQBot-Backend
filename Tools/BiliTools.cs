@@ -33,8 +33,8 @@ public static class BiliTools {
 	}
 	*/
 
-	
-	
+
+
 
 	public static async Task<BiliApiSpaceInfo> GetBiliApiUserSpaceInfoAsync(long uid) =>
 		await HttpClientProvider.client.GetFromJsonAsync<BiliApiSpaceInfo>($"https://api.bilibili.com/x/space/acc/info?mid={uid}").ConfigureAwait(false);
