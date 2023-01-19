@@ -12,17 +12,18 @@
 	</ItemGroup>
 	<ItemGroup>
 		<Using Include="PersonalQQBotBackend" />
-		<Using Include="PersonalQQBotBackend.Tool" />
-		<Using Include="PersonalQQBotBackend.Struct" />
-		<Using Include="PersonalQQBotBackend.Provider" />
-		<Using Include="PersonalQQBotBackend.Processer" />
-		<Using Include="PersonalQQBotBackend.GeneratedRegex" />
+		<Using Include="PersonalQQBotBackend.Tools" />
+		<Using Include="PersonalQQBotBackend.Structs" />
+		<Using Include="PersonalQQBotBackend.Providers" />
+		<Using Include="PersonalQQBotBackend.Processers" />
+		<Using Include="PersonalQQBotBackend.GeneratedRegexes" />
 		<Using Include="System.Text" />
 		<Using Include="System.Text.Json" />
 		<Using Include="System.Text.Json.Serialization" />
 		<Using Include="System.Net.WebSockets" />
 		<Using Include="System.Net.Http.Json" />
 		<Using Include="Microsoft.Extensions.Hosting" />
+		<Using Include="Microsoft.Extensions.Logging" />
 		<Using Include="Microsoft.Extensions.Configuration" />
 		<Using Include="Microsoft.Extensions.DependencyInjection" />
 	</ItemGroup>

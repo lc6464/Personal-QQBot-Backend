@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 
-namespace PersonalQQBotBackend.Provider;
+namespace PersonalQQBotBackend.Providers;
 
 public static class HttpClientProvider {
 	public static readonly HttpClient client = new() {
@@ -40,4 +40,12 @@ public static class WebSocketProvider {
 
 	public static async ValueTask SendTextAsync(ReadOnlyMemory<byte> buffer, bool endOfMessage = true) =>
 		await WebSocket.SendAsync(buffer, WebSocketMessageType.Text, endOfMessage, CancellationToken.None).ConfigureAwait(false);
+}
+
+
+public static class LoggerProvider {
+	public static readonly ILogger logger = Program.Host!.Services.GetRequiredService<ILogger>();
+
+	public static ILogger<T> GetLogger<T>() =>
+		Program.Host!.Services.GetRequiredService<ILogger<T>>();
 }

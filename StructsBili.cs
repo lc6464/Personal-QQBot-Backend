@@ -1,4 +1,4 @@
-﻿namespace PersonalQQBotBackend.Struct;
+﻿namespace PersonalQQBotBackend.Structs;
 
 public struct BiliApiSpaceInfo {
 	[JsonPropertyName("code")]

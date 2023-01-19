@@ -1,4 +1,4 @@
-﻿namespace PersonalQQBotBackend.Struct;
+﻿namespace PersonalQQBotBackend.Structs;
 
 public struct ReceivedMessage {
 	[JsonPropertyName("post_type")]
@@ -7,11 +7,14 @@ public struct ReceivedMessage {
 	[JsonPropertyName("message_type")]
 	public string? MessageType { get; set; }
 
-	[JsonPropertyName("sub_type")]
-	public string? SubType { get; set; }
+	[JsonPropertyName("meta_event_type")]
+	public string? MetaEventType { get; set; }
 
 	[JsonPropertyName("notice_type")]
 	public string? NoticeType { get; set; }
+
+	[JsonPropertyName("sub_type")]
+	public string? SubType { get; set; }
 
 	[JsonPropertyName("raw_message")]
 	public string? RawMessage { get; set; }
