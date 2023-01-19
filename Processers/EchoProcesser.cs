@@ -2,7 +2,7 @@
 
 public static class EchoProcesser {
 	private static readonly ILogger _logger = LoggerProvider.logger;
-	
+
 	public static void Process(ReceivedMessage message) {
 		lock (MainProcesser.sendMessagesPool) {
 			MainProcesser.sendMessagesPool.RemoveAll(x => x.Echo == message.Echo);
