@@ -4,7 +4,7 @@ using Microsoft.Extensions.Caching.Memory;
 namespace PersonalQQBotBackend.Processers;
 
 public static class ALiQueryProcesser {
-	private static readonly ILogger _logger = LoggerProvider.logger;
+	private static readonly ILogger<Program> _logger = LoggerProvider.GetLogger<Program>();
 
 	public static async Task ProcessAsync(ReceivedMessage message, Match aLiQueryRegexMatch) {
 		string echo; // skipcq: CS-W1022

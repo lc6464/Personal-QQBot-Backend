@@ -3,8 +3,7 @@
 namespace PersonalQQBotBackend.Processers;
 
 public static class MainProcesser {
-	//private static readonly ClientWebSocket ws = WebSocketProvider.WebSocket;
-	private static readonly ILogger _logger = LoggerProvider.logger;
+	private static readonly ILogger<Program> _logger = LoggerProvider.GetLogger<Program>();
 
 	public static readonly List<SendMessage> sendMessagesPool = new();
 

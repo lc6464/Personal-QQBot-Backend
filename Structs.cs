@@ -25,6 +25,9 @@ public struct ReceivedMessage {
 	[JsonPropertyName("message_id")]
 	public long? MessageId { get; set; }
 
+	[JsonPropertyName("message_seq")]
+	public long? MessageSeq { get; set; }
+
 	[JsonPropertyName("group_id")]
 	public long? GroupId { get; set; }
 

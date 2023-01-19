@@ -44,7 +44,9 @@ public static class WebSocketProvider {
 
 
 public static class LoggerProvider {
-	public static readonly ILogger logger = Program.Host!.Services.GetRequiredService<ILogger>();
+	//public static readonly ILogger logger = Program.Host!.Services.GetRequiredService<ILogger>();
+
+	//public static readonly ILogger<Program> programLogger = Program.Host!.Services.GetRequiredService<ILogger<Program>>();
 
 	public static ILogger<T> GetLogger<T>() =>
 		Program.Host!.Services.GetRequiredService<ILogger<T>>();

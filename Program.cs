@@ -1,4 +1,4 @@
-﻿using var Host = Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args).Build();
+﻿Host = Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args).Build();
 var config = Host.Services.GetRequiredService<IConfiguration>();
 var programLogger = Host.Services.GetRequiredService<ILogger<Program>>();
 
@@ -61,6 +61,7 @@ Task.Run(async () => {
 			}
 
 			MainProcesser.ProcessReceivedMessageAsync(message); // 异步处理消息（不等待）
+			//await MainProcesser.ProcessReceivedMessageAsync(message).ConfigureAwait(false);
 		} catch (Exception e) {
 			var messageString = Encoding.UTF8.GetString(buffer.AsSpan(..result.Count));
 			programLogger.LogWithTime($"无法解析接收到的数据：{messageString}\r\n{e}", LogLevel.Error);
