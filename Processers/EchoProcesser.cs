@@ -4,7 +4,7 @@ public static class EchoProcesser {
 	private static readonly ILogger<Program> _logger = LoggerProvider.GetLogger<Program>();
 
 	public static void Process(ReceivedMessage message) {
-		SendMessage sendMessage;
+		SendMessage sendMessage = default;
 		lock (MainProcesser.sendMessagesPool) {
 			sendMessage = MainProcesser.sendMessagesPool.Find(x => x.Echo == message.Echo);
 			MainProcesser.sendMessagesPool.Remove(sendMessage);
