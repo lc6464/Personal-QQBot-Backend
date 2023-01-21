@@ -76,7 +76,9 @@ timer.Elapsed += (object? sender, System.Timers.ElapsedEventArgs e) => {
 	lock (MainProcesser.sendMessageActionsPool) {
 		foreach (var sendMessageAction in MainProcesser.sendMessageActionsPool) {
 			if (sendMessageAction.CreatedTime.AddSeconds(sendMessageAction.TimeoutSecond) < DateTime.Now) {
+				programLogger.LogWithTime($"发送消息 {sendMessageAction.Message.Echo} 超时，创建于 {sendMessageAction.CreatedTime:yyyy-MM-dd HH:mm:ss}，超时时长{sendMessageAction.TimeoutSecond}秒。", LogLevel.Warning);
 				if (sendMessageAction.TimeoutCallback is not null) {
+					programLogger.LogWithTime($"正在异步执行 {sendMessageAction.Message.Echo} 的超时回调。", LogLevel.Debug);
 					_ = Task.Run(sendMessageAction.TimeoutCallback);
 				}
 				_ = MainProcesser.sendMessageActionsPool.Remove(sendMessageAction);

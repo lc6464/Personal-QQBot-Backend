@@ -8,6 +8,7 @@ public static class MainProcesser {
 	public static readonly List<SendMessageAction> sendMessageActionsPool = new();
 
 	public static async Task ProcessReceivedMessageAsync(ReceivedMessage message) {
+		var echo = $"{DateTime.Now.Ticks}-{message.GroupId}-{message.UserId}-{message.MessageId}-{Random.Shared.NextString(16)}";
 		if (message.PostType == "message") {
 			var aLiQueryRegexMatch = Regexes.ALiQueryRegex().Match(message.RawMessage!); // 获取阿梨相关查询功能的 Match
 			Match? biliUploaderQueryRegexMatch = null; // 获取B站UP主相关查询功能的 Match
@@ -32,7 +33,7 @@ public static class MainProcesser {
 						GroupId = message.GroupId,
 						Message = $"[CQ:reply,id={message.MessageId}] [CQ:at,qq={message.UserId}]你好！"
 					},
-					Echo = $"{DateTime.Now.Ticks}-{message.GroupId}-{message.UserId}-{message.MessageId}-{Random.Shared.NextString(16)}"
+					Echo = echo
 				};
 				await MessageTools.SendSendMessageAsync(sendMessage).ConfigureAwait(false);
 			} else if (isPrivateWithFriend) {
@@ -43,26 +44,15 @@ public static class MainProcesser {
 						UserId = message.UserId,
 						Message = $"[CQ:reply,id={message.MessageId}]你好！"
 					},
-					Echo = $"{DateTime.Now.Ticks}-{message.UserId}-{message.MessageId}-{Random.Shared.NextString(16)}"
+					Echo = echo
 				};
 				await MessageTools.SendSendMessageAsync(sendMessage).ConfigureAwait(false);
 			}
 		} else if (message.PostType == "notice" && message.SubType == "poke" && message.TargetId == message.SelfId && message.UserId != message.SelfId) {
 			_logger.LogWithTime($"{message.GroupId} {message.UserId} 命中戳一戳。", LogLevel.Debug);
-			SendMessage sendMessage = new() {
-				Action = "send_msg",
-				Params = message.GroupId is not null ? new() {
-					GroupId = message.GroupId,
-					Message = $"[CQ:poke,qq={message.UserId}]"
-				} : new() {
-					UserId = message.UserId,
-					Message = "你好！"
-				},
-				Echo = message.GroupId is not null
-					? $"{DateTime.Now.Ticks}-{message.GroupId}-{message.UserId}-{Random.Shared.NextString(16)}"
-					: $"{DateTime.Now.Ticks}-{message.UserId}-{Random.Shared.NextString(16)}"
-			};
-			await MessageTools.SendSendMessageAsync(sendMessage).ConfigureAwait(false);
+			var isGroup = message.GroupId is not null;
+			var messageText = isGroup ? $"[CQ:poke,qq={message.UserId}]" : "你好！";
+			await MessageTools.SendTextMessageAsync(messageText, isGroup, isGroup ? message.GroupId : message.UserId, echo).ConfigureAwait(false);
 		} else if (!string.IsNullOrWhiteSpace(message.Echo)) {
 			EchoProcesser.Process(message);
 		}
