@@ -1,9 +1,9 @@
 ﻿namespace PersonalQQBotBackend.Tools;
 
 public static class MessageTools {
-	public static async Task SendSendMessageAsync(SendMessage message, Action<bool, ReceivedMessage?>? callback = null) {
+	public static async Task SendSendMessageAsync(SendMessage message, Action<bool, ReceivedMessage?>? callback = null, int timeoutSecond = 10, Action? timeoutCallback = null) {
 		lock (MainProcesser.sendMessageActionsPool) {
-			MainProcesser.sendMessageActionsPool.Add(new() { Message = message, Callback = callback });
+			MainProcesser.sendMessageActionsPool.Add(new(message, callback) { TimeoutSecond = timeoutSecond, TimeoutCallback = timeoutCallback });
 		}
 		await WebSocketProvider.SendTextAsync(JsonSerializer.SerializeToUtf8Bytes(message)).ConfigureAwait(false);
 	}
@@ -11,7 +11,6 @@ public static class MessageTools {
 	public static async Task SendTextMessageAsync(string message, bool isGroup, long? targetId, string echo) {
 		SendMessageParams @params = isGroup ? new() { GroupId = targetId } : new() { UserId = targetId };
 		@params.Message = message;
-		SendMessage sendMessage = new() { Action = "send_msg", Params = @params, Echo = echo };
-		await SendSendMessageAsync(sendMessage).ConfigureAwait(false);
+		await SendSendMessageAsync(new() { Action = "send_msg", Params = @params, Echo = echo }).ConfigureAwait(false);
 	}
 }

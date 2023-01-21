@@ -27,7 +27,7 @@ public static class ALiQueryProcesser {
 				if (info.Code == 0) {
 					var videoInfo = info.Data?.List.VList[0];
 					var isGroup = message.MessageType == "group";
-					var sendMessageText = $"[CQ:reply,id={message.MessageId}]{(isGroup ? $" [CQ:at,qq={message.UserId}]" : "")}阿梨最新稿件：\n" +
+					var sendMessageText = $"[CQ:reply,id={message.MessageId}]{(isGroup ? $" [CQ:at,qq={message.UserId}]" : "")}阿梨的最新稿件：\n" +
 						$"标题：{videoInfo?.Title}\n" +
 						$"地址：https://www.bilibili.com/video/av{videoInfo?.Aid}\n" +
 						$"发布时间：{DateTimeOffset.FromUnixTimeSeconds(videoInfo?.Created ?? 0).LocalDateTime:yyyy-M-d H:mm:ss}\n" +
@@ -35,7 +35,7 @@ public static class ALiQueryProcesser {
 						$"数据更新时间：{updateInfoTime:yyyy-M-d H:mm:ss}";
 					await MessageTools.SendTextMessageAsync(sendMessageText, isGroup, isGroup ? message.GroupId : message.UserId, echo).ConfigureAwait(false);
 				} else {
-					_logger.LogWithTime($"获取到的阿梨最新稿件信息包含错误：{info.Code} {info.Message}", LogLevel.Error);
+					_logger.LogWithTime($"获取到的阿梨的最新稿件信息包含错误：{info.Code} {info.Message}", LogLevel.Error);
 					var isGroup = message.MessageType == "group";
 					var sendMessageText = isGroup
 						? $"[CQ:reply,id={message.MessageId}] [CQ:at,qq={message.UserId}]获取失败（数据异常），请联系 [CQ:at,qq=1138779174](1138779174) 处理。"
@@ -43,7 +43,7 @@ public static class ALiQueryProcesser {
 					await MessageTools.SendTextMessageAsync(sendMessageText, isGroup, isGroup ? message.GroupId : message.UserId, echo).ConfigureAwait(false);
 				}
 			} catch (Exception e) {
-				_logger.LogWithTime($"获取阿梨最新稿件信息时发生异常：\r\n{e}", LogLevel.Error);
+				_logger.LogWithTime($"获取阿梨的最新稿件信息时发生异常：\r\n{e}", LogLevel.Error);
 				var isGroup = message.MessageType == "group";
 				var sendMessageText = isGroup
 					? $"[CQ:reply,id={message.MessageId}] [CQ:at,qq={message.UserId}]获取失败（获取异常），请联系 [CQ:at,qq=1138779174](1138779174) 处理。"
@@ -64,13 +64,13 @@ public static class ALiQueryProcesser {
 				if (info.Code == 0) {
 					var isGroup = message.MessageType == "group";
 					var sendMessageText = $"[CQ:reply,id={message.MessageId}]{(message.MessageType == "group" ? $" [CQ:at,qq={message.UserId}]\n" : "")}" +
-						$"阿梨直播状态：{(info.Data?.LiveRoom.LiveStatus == 1 ? "正在直播" : "未在直播")}\n" +
+						$"阿梨的直播状态：{(info.Data?.LiveRoom.LiveStatus == 1 ? "正在直播" : "未在直播")}\n" +
 						$"直播间标题：{info.Data?.LiveRoom.Title}\n" +
 						$"直播间地址：https://live.bilibili.com/{info.Data?.LiveRoom.RoomId}\n\n" +
 						$"数据更新时间：{updateInfoTime:yyyy-M-d H:mm:ss}";
 					await MessageTools.SendTextMessageAsync(sendMessageText, isGroup, isGroup ? message.GroupId : message.UserId, echo).ConfigureAwait(false);
 				} else {
-					_logger.LogWithTime($"获取到的阿梨直播状态信息包含错误：{info.Code} {info.Message}", LogLevel.Error);
+					_logger.LogWithTime($"获取到的阿梨的直播状态信息包含错误：{info.Code} {info.Message}", LogLevel.Error);
 					var isGroup = message.MessageType == "group";
 					var sendMessageText = isGroup
 						? $"[CQ:reply,id={message.MessageId}] [CQ:at,qq={message.UserId}]获取失败（数据异常），请联系 [CQ:at,qq=1138779174](1138779174) 处理。"
@@ -78,7 +78,7 @@ public static class ALiQueryProcesser {
 					await MessageTools.SendTextMessageAsync(sendMessageText, isGroup, isGroup ? message.GroupId : message.UserId, echo).ConfigureAwait(false);
 				}
 			} catch (Exception e) {
-				_logger.LogWithTime($"获取阿梨直播状态信息时发生异常：\r\n{e}", LogLevel.Error);
+				_logger.LogWithTime($"获取阿梨的直播状态信息时发生异常：\r\n{e}", LogLevel.Error);
 				var isGroup = message.MessageType == "group";
 				var sendMessageText = isGroup
 					? $"[CQ:reply,id={message.MessageId}] [CQ:at,qq={message.UserId}]获取失败（获取异常），请联系 [CQ:at,qq=1138779174](1138779174) 处理。"

@@ -1,4 +1,6 @@
-﻿namespace PersonalQQBotBackend.Processers;
+﻿using System.Text.RegularExpressions;
+
+namespace PersonalQQBotBackend.Processers;
 
 public static class MainProcesser {
 	private static readonly ILogger<Program> _logger = LoggerProvider.GetLogger<Program>();
@@ -8,11 +10,21 @@ public static class MainProcesser {
 	public static async Task ProcessReceivedMessageAsync(ReceivedMessage message) {
 		if (message.PostType == "message") {
 			var aLiQueryRegexMatch = Regexes.ALiQueryRegex().Match(message.RawMessage!); // 获取阿梨相关查询功能的 Match
-			if (((message.MessageType == "group" && message.SubType != "anonymous") || (message.MessageType == "private" && message.SubType == "friend")) && aLiQueryRegexMatch.Success) {
+			Match? biliUploaderQueryRegexMatch = null; // 获取B站UP主相关查询功能的 Match
+			if (!aLiQueryRegexMatch.Success) {
+				biliUploaderQueryRegexMatch = Regexes.BiliUploaderQueryRegex().Match(message.RawMessage!);
+			}
+			bool isGroupNotAnonymous = message.MessageType == "group" && message.SubType != "anonymous", // 群聊非匿名
+				isPrivateWithFriend = message.MessageType == "private" && message.SubType == "friend"; // 私聊好友
+			if ((isGroupNotAnonymous || isPrivateWithFriend) && aLiQueryRegexMatch.Success) {
 				// 如果是群消息且不是匿名消息，或者是私聊消息且是好友消息，且匹配到了阿梨相关查询功能的正则表达式
 				_logger.LogWithTime($"{message.GroupId} {message.UserId} 命中阿梨相关查询功能：{message.RawMessage}", LogLevel.Debug);
 				await ALiQueryProcesser.ProcessAsync(message, aLiQueryRegexMatch).ConfigureAwait(false);
-			} else if (message.MessageType == "group" && message.RawMessage!.Contains($"[CQ:at,qq={message.SelfId}]") && message.SubType != "anonymous") {
+			} else if ((isGroupNotAnonymous || isPrivateWithFriend) && biliUploaderQueryRegexMatch is not null && biliUploaderQueryRegexMatch.Success) {
+				// 如果是群消息且不是匿名消息，或者是私聊消息且是好友消息，且匹配到了B站UP主相关查询功能的正则表达式
+				_logger.LogWithTime($"{message.GroupId} {message.UserId} 命中B站UP主相关查询功能：{message.RawMessage}", LogLevel.Debug);
+				await BiliUploaderQueryProcesser.ProcessAsync(message, biliUploaderQueryRegexMatch).ConfigureAwait(false);
+			} else if (isGroupNotAnonymous && message.RawMessage!.Contains($"[CQ:at,qq={message.SelfId}]")) {
 				_logger.LogWithTime($"{message.GroupId} {message.UserId} 命中群聊 At：{message.RawMessage}", LogLevel.Debug);
 				SendMessage sendMessage = new() {
 					Action = "send_msg",
@@ -23,7 +35,7 @@ public static class MainProcesser {
 					Echo = $"{DateTime.Now.Ticks}-{message.GroupId}-{message.UserId}-{message.MessageId}-{Random.Shared.NextString(16)}"
 				};
 				await MessageTools.SendSendMessageAsync(sendMessage).ConfigureAwait(false);
-			} else if (message.MessageType == "private" && message.SubType == "friend") {
+			} else if (isPrivateWithFriend) {
 				_logger.LogWithTime($"{message.UserId} 命中好友私聊：{message.RawMessage}", LogLevel.Debug);
 				SendMessage sendMessage = new() {
 					Action = "send_msg",
