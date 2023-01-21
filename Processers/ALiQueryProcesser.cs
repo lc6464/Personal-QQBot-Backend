@@ -64,9 +64,9 @@ public static class ALiQueryProcesser {
 				if (info.Code == 0) {
 					var isGroup = message.MessageType == "group";
 					var sendMessageText = $"[CQ:reply,id={message.MessageId}]{(message.MessageType == "group" ? $" [CQ:at,qq={message.UserId}]\n" : "")}" +
-						$"阿梨的直播状态：{(info.Data?.LiveRoom.LiveStatus == 1 ? "正在直播" : "未在直播")}\n" +
-						$"直播间标题：{info.Data?.LiveRoom.Title}\n" +
-						$"直播间地址：https://live.bilibili.com/{info.Data?.LiveRoom.RoomId}\n\n" +
+						$"阿梨的直播状态：{(info.Data?.LiveRoom?.LiveStatus == 1 ? "正在直播" : "未在直播")}\n" +
+						$"直播间标题：{info.Data?.LiveRoom?.Title}\n" +
+						$"直播间地址：https://live.bilibili.com/{info.Data?.LiveRoom?.RoomId}\n\n" +
 						$"数据更新时间：{updateInfoTime:yyyy-M-d H:mm:ss}";
 					await MessageTools.SendTextMessageAsync(sendMessageText, isGroup, isGroup ? message.GroupId : message.UserId, echo).ConfigureAwait(false);
 				} else {

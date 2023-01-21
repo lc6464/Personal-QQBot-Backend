@@ -22,7 +22,7 @@ public struct BiliApiSpaceInfoData {
 	public string Name { get; set; }
 
 	[JsonPropertyName("live_room")]
-	public BiliApiSpaceInfoDataLiveRoom LiveRoom { get; set; }
+	public BiliApiSpaceInfoDataLiveRoom? LiveRoom { get; set; }
 }
 
 public struct BiliApiSpaceInfoDataLiveRoom {

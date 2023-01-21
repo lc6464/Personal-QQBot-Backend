@@ -65,11 +65,11 @@ public static class BiliUploaderQueryProcesser {
 					updateInfoTime = CacheProvider.cache.Get<DateTime>($"更新BiliUploader {uidString} 直播状态信息时间");
 				}
 				if (info.Code == 0) {
-					var sendMessageText = info.Data?.LiveRoom.RoomStatus == 1
+					var sendMessageText = (info.Data?.LiveRoom is not null && info.Data?.LiveRoom?.RoomStatus == 1)
 						? $"[CQ:reply,id={message.MessageId}]{(message.MessageType == "group" ? $" [CQ:at,qq={message.UserId}]\n" : "")}" +
-							$"B站主播 {uidString} 的直播状态：{(info.Data?.LiveRoom.LiveStatus == 1 ? "正在直播" : "未在直播")}\n" +
-							$"直播间标题：{info.Data?.LiveRoom.Title}\n" +
-							$"直播间地址：https://live.bilibili.com/{info.Data?.LiveRoom.RoomId}\n\n" +
+							$"B站主播 {uidString} 的直播状态：{(info.Data?.LiveRoom?.LiveStatus == 1 ? "正在直播" : "未在直播")}\n" +
+							$"直播间标题：{info.Data?.LiveRoom?.Title}\n" +
+							$"直播间地址：https://live.bilibili.com/{info.Data?.LiveRoom?.RoomId}\n\n" +
 							$"数据更新时间：{updateInfoTime:yyyy-M-d H:mm:ss}"
 						: $"[CQ:reply,id={message.MessageId}]{(message.MessageType == "group" ? $" [CQ:at,qq={message.UserId}]" : "")}B站用户 {uidString} 当前未开通直播间。";
 					await MessageTools.SendTextMessageAsync(sendMessageText, isGroup, isGroup ? message.GroupId : message.UserId, echo).ConfigureAwait(false);
