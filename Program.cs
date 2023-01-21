@@ -2,12 +2,12 @@
 var config = Host.Services.GetRequiredService<IConfiguration>();
 var programLogger = Host.Services.GetRequiredService<ILogger<Program>>();
 
-Console.WriteLine("欢迎使用 LC 的个人 QQ 机器人后端。");
+programLogger.LogWithTime("欢迎使用 LC 的个人 QQ 机器人后端。");
 
 var uriString = config.GetValue<string>("Connection:Uri");
 
 if (uriString is null) {
-	Console.Error.WriteLine("未找到配置文件中的 Connection:Uri 项。");
+	programLogger.LogWithTime("未找到配置文件中的 Connection:Uri 项。", LogLevel.Critical);
 	Environment.Exit(2); // skipcq: CS-W1005
 }
 
@@ -60,7 +60,7 @@ Task.Run(async () => {
 				programLogger.LogWithTime($"接收到事件：{messageString}", LogLevel.Debug);
 			}
 
-			MainProcesser.ProcessReceivedMessageAsync(message); // 异步处理消息（不等待）
+			_ = MainProcesser.ProcessReceivedMessageAsync(message); // 异步处理消息（不等待）
 		} catch (Exception e) {
 			var messageString = Encoding.UTF8.GetString(buffer.AsSpan(..result.Count));
 			programLogger.LogWithTime($"无法解析接收到的数据：{messageString}\r\n{e}", LogLevel.Error);
@@ -71,20 +71,16 @@ Task.Run(async () => {
 
 
 
-System.Timers.Timer timer = new() { AutoReset = true, Interval = 10000 };
+System.Timers.Timer timer = new() { AutoReset = true, Interval = 1000 };
 timer.Elapsed += (object? sender, System.Timers.ElapsedEventArgs e) => {
-	var count = 0;
-	lock (MainProcesser.sendMessagesPool) {
-		count = MainProcesser.sendMessagesPool.Count;
-	}
-	if (count != 0) {
-		programLogger.LogWithTime($"消息池剩余消息数：{count}");
-		Thread.Sleep(200);
-		lock (MainProcesser.sendMessagesPool) {
-			count = MainProcesser.sendMessagesPool.Count;
-		}
-		if (count != 0) {
-			programLogger.LogWithTime($"消息池剩余消息数：{count}，其中的一些消息很可能没有被处理！", LogLevel.Warning);
+	lock (MainProcesser.sendMessageActionsPool) {
+		foreach (var sendMessageAction in MainProcesser.sendMessageActionsPool) {
+			if (sendMessageAction.CreatedTime.AddSeconds(sendMessageAction.TimeoutSecond) < DateTime.Now) {
+				if (sendMessageAction.TimeoutCallback is not null) {
+					_ = Task.Run(sendMessageAction.TimeoutCallback);
+				}
+				_ = MainProcesser.sendMessageActionsPool.Remove(sendMessageAction);
+			}
 		}
 	}
 };

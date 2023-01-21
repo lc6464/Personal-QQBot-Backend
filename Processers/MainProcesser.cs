@@ -1,16 +1,14 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-
-namespace PersonalQQBotBackend.Processers;
+﻿namespace PersonalQQBotBackend.Processers;
 
 public static class MainProcesser {
 	private static readonly ILogger<Program> _logger = LoggerProvider.GetLogger<Program>();
 
-	public static readonly List<SendMessage> sendMessagesPool = new();
+	public static readonly List<SendMessageAction> sendMessageActionsPool = new();
 
 	public static async Task ProcessReceivedMessageAsync(ReceivedMessage message) {
 		if (message.PostType == "message") {
 			var aLiQueryRegexMatch = Regexes.ALiQueryRegex().Match(message.RawMessage!); // 获取阿梨相关查询功能的 Match
-			if ((message.MessageType == "group" && message.SubType != "anonymous" || message.MessageType == "private" && message.SubType == "friend") && aLiQueryRegexMatch.Success) {
+			if (((message.MessageType == "group" && message.SubType != "anonymous") || (message.MessageType == "private" && message.SubType == "friend")) && aLiQueryRegexMatch.Success) {
 				// 如果是群消息且不是匿名消息，或者是私聊消息且是好友消息，且匹配到了阿梨相关查询功能的正则表达式
 				_logger.LogWithTime($"{message.GroupId} {message.UserId} 命中阿梨相关查询功能：{message.RawMessage}", LogLevel.Debug);
 				await ALiQueryProcesser.ProcessAsync(message, aLiQueryRegexMatch).ConfigureAwait(false);

@@ -13,9 +13,9 @@
 	<ItemGroup>
 		<Using Include="PersonalQQBotBackend" />
 		<Using Include="PersonalQQBotBackend.Tools" />
-		<Using Include="PersonalQQBotBackend.Structs" />
 		<Using Include="PersonalQQBotBackend.Providers" />
 		<Using Include="PersonalQQBotBackend.Processers" />
+		<Using Include="PersonalQQBotBackend.Structures" />
 		<Using Include="PersonalQQBotBackend.GeneratedRegexes" />
 		<Using Include="System.Text" />
 		<Using Include="System.Text.Json" />
