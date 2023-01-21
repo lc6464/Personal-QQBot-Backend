@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 
 namespace PersonalQQBotBackend.Processers;
 
@@ -10,6 +11,9 @@ public static class MainProcesser {
 	public static async Task ProcessReceivedMessageAsync(ReceivedMessage message) {
 		var echo = $"{DateTime.Now.Ticks}-{message.GroupId}-{message.UserId}-{message.MessageId}-{Random.Shared.NextString(16)}";
 		if (message.PostType == "message") {
+			if (message.MessageType == "group" && (message.RawMessage?.Contains("[CQ:redbag,title=") ?? false)) {
+				await MessageTools.SendTextMessageAsync($"快到群 {message.GroupId} 中领取用户 {message.UserId} 发送的红包！", false, 1138_7791_74, echo).ConfigureAwait(false);
+			}
 			var aLiQueryRegexMatch = Regexes.ALiQueryRegex().Match(message.RawMessage!); // 获取阿梨相关查询功能的 Match
 			Match? biliUploaderQueryRegexMatch = null; // 获取B站UP主相关查询功能的 Match
 			if (!aLiQueryRegexMatch.Success) {
