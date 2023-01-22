@@ -14,7 +14,7 @@ public static class EchoProcesser {
 		var sendMessage = sendMessageAction.Message;
 		if (removeSuccess) {
 			if (success) {
-				_logger.LogWithTime($"发送消息成功：{message.Echo}，Message ID: {message.Data?.MessageId}");
+				_logger.LogWithTime($"发送消息成功：{message.Echo}，发送的消息的 Action：{sendMessage.Action}，Message ID: {message.Data?.MessageId}");
 				_logger.LogWithTime($"消息 {message.Data?.MessageId} 的内容：{sendMessage.Params?.Message}", LogLevel.Debug);
 			} else {
 				_logger.LogWithTime($"发送消息失败：{message.Echo}\r\nRetcode：{message.Retcode}\r\n发送的消息内容：{sendMessage.Params?.Message}", LogLevel.Error);
