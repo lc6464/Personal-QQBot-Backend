@@ -29,21 +29,37 @@ public static class MainProcesser {
 				// 如果是群消息且不是匿名消息，或者是私聊消息且是好友消息，且匹配到了B站UP主相关查询功能的正则表达式
 				_logger.LogWithTime($"{message.GroupId} {message.UserId} 命中B站UP主相关查询功能：{message.RawMessage}", LogLevel.Debug);
 				await BiliUploaderQueryProcesser.ProcessAsync(message, biliUploaderQueryRegexMatch).ConfigureAwait(false);
-			} else if (((isGroupNotAnonymous && message.GroupId == 5220_71644) || (isPrivateWithFriend && message.UserId == 1138_7791_74)) && (message.RawMessage?.Contains("回调测试") ?? false)) {
-				_logger.LogWithTime($"{message.GroupId} {message.UserId} 命中回调测试：{message.RawMessage}", LogLevel.Debug);
+			} else if (((isGroupNotAnonymous && message.GroupId == 5220_71644 && message.RawMessage!.Contains($"[CQ:at,qq={message.SelfId}]")) || (isPrivateWithFriend && message.UserId == 1138_7791_74)) && (message.RawMessage!.Contains("回调测试") || message.RawMessage!.Contains("撤回测试"))) {
+				_logger.LogWithTime($"{message.GroupId} {message.UserId} 命中回调或撤回测试：{message.RawMessage}", LogLevel.Debug);
 				var isGroup = message.GroupId is not null;
 				var messageText = $"[CQ:reply,id={message.MessageId}]{(isGroup ? $" [CQ:at,qq={message.UserId}]" : "")} 请等待约两秒。";
 				await MessageTools.SendTextMessageAsync(messageText, isGroup, isGroup ? message.GroupId : message.UserId, echo,
 					async (success, callbackMessage) => {
 						if (success) {
-							_logger.LogWithTime($"回调测试：发送消息成功：{echo}", LogLevel.Debug);
+							_logger.LogWithTime($"回调或撤回测试：发送消息成功：{echo}", LogLevel.Debug);
 							echo = $"{DateTime.Now.Ticks}-{message.GroupId}-{message.UserId}-{message.MessageId}-{Random.Shared.NextString(16)}";
-							messageText = $"[CQ:reply,id={callbackMessage?.Data?.MessageId}]回调测试成功。";
-							Thread.Sleep(2000);
-							await MessageTools.SendTextMessageAsync(messageText, isGroup, isGroup ? message.GroupId : message.UserId, echo).ConfigureAwait(false);
+							if (message.RawMessage.Contains("回调测试")) {
+								messageText = $"[CQ:reply,id={callbackMessage?.Data?.MessageId}]回调测试成功。";
+								Thread.Sleep(2000);
+								await MessageTools.SendTextMessageAsync(messageText, isGroup, isGroup ? message.GroupId : message.UserId, echo).ConfigureAwait(false);
+							} else {
+								SendMessage sendMessage = new() { Action = "delete_msg", Params = new() { MessageId = callbackMessage?.Data?.MessageId }, Echo = echo };
+								SendMessageAction sendMessageAction = new(sendMessage);
+								Thread.Sleep(2000);
+								lock (sendMessageActionsPool) {
+									sendMessageActionsPool.Add(sendMessageAction);
+								}
+								await WebSocketProvider.SendTextAsync(JsonSerializer.SerializeToUtf8Bytes(sendMessage)).ConfigureAwait(false);
+							}
 						} else {
-							_logger.LogWithTime($"回调测试：发送消息失败：{echo}", LogLevel.Debug);
+							_logger.LogWithTime($"回调或撤回测试：发送消息失败：{echo}", LogLevel.Debug);
 						}
+					}, 5, async () => {
+						_logger.LogWithTime($"回调或撤回测试：回调超时：{echo}", LogLevel.Error);
+						echo = $"{DateTime.Now.Ticks}-{message.GroupId}-{message.UserId}-{message.MessageId}-{Random.Shared.NextString(16)}";
+						messageText = $"回调超时，未在五秒内接收到响应信息！";
+						await MessageTools.SendTextMessageAsync(messageText, isGroup, isGroup ? message.GroupId : message.UserId, echo).ConfigureAwait(false);
+
 					}).ConfigureAwait(false);
 			} else if (isGroupNotAnonymous && message.RawMessage!.Contains($"[CQ:at,qq={message.SelfId}]")) {
 				_logger.LogWithTime($"{message.GroupId} {message.UserId} 命中群聊 At：{message.RawMessage}", LogLevel.Debug);
