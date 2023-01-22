@@ -8,9 +8,9 @@ public static class MessageTools {
 		await WebSocketProvider.SendTextAsync(JsonSerializer.SerializeToUtf8Bytes(message)).ConfigureAwait(false);
 	}
 
-	public static async Task SendTextMessageAsync(string message, bool isGroup, long? targetId, string echo) {
+	public static async Task SendTextMessageAsync(string message, bool isGroup, long? targetId, string echo, Action<bool, ReceivedMessage?>? callback = null, int timeoutSecond = 10, Action? timeoutCallback = null) {
 		SendMessageParams @params = isGroup ? new() { GroupId = targetId } : new() { UserId = targetId };
 		@params.Message = message;
-		await SendSendMessageAsync(new() { Action = "send_msg", Params = @params, Echo = echo }).ConfigureAwait(false);
+		await SendSendMessageAsync(new() { Action = "send_msg", Params = @params, Echo = echo }, callback, timeoutSecond, timeoutCallback).ConfigureAwait(false);
 	}
 }
