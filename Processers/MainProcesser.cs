@@ -32,7 +32,7 @@ public static class MainProcesser {
 			} else if (((isGroupNotAnonymous && message.GroupId == 5220_71644 && message.RawMessage!.Contains($"[CQ:at,qq={message.SelfId}]")) || (isPrivateWithFriend && message.UserId == 1138_7791_74)) && (message.RawMessage!.Contains("回调测试") || message.RawMessage!.Contains("撤回测试"))) {
 				_logger.LogWithTime($"{message.GroupId} {message.UserId} 命中回调或撤回测试：{message.RawMessage}", LogLevel.Debug);
 				var isGroup = message.GroupId is not null;
-				var messageText = $"[CQ:reply,id={message.MessageId}]{(isGroup ? $" [CQ:at,qq={message.UserId}]" : "")} 请等待约两秒。";
+				var messageText = $"[CQ:reply,id={message.MessageId}]{(isGroup ? $" [CQ:at,qq={message.UserId}]" : "")} 请等待约五秒（撤回测试可能会低于五秒）。";
 				await MessageTools.SendTextMessageAsync(messageText, isGroup, isGroup ? message.GroupId : message.UserId, echo,
 					async (success, callbackMessage) => {
 						if (success) {
@@ -40,12 +40,12 @@ public static class MainProcesser {
 							echo = $"{DateTime.Now.Ticks}-{message.GroupId}-{message.UserId}-{message.MessageId}-{Random.Shared.NextString(16)}";
 							if (message.RawMessage.Contains("回调测试")) {
 								messageText = $"[CQ:reply,id={callbackMessage?.Data?.MessageId}]回调测试成功。";
-								Thread.Sleep(2000);
+								await Task.Delay(5000).ConfigureAwait(false);
 								await MessageTools.SendTextMessageAsync(messageText, isGroup, isGroup ? message.GroupId : message.UserId, echo).ConfigureAwait(false);
 							} else {
 								SendMessage sendMessage = new() { Action = "delete_msg", Params = new() { MessageId = callbackMessage?.Data?.MessageId }, Echo = echo };
 								SendMessageAction sendMessageAction = new(sendMessage);
-								Thread.Sleep(2000);
+								await Task.Delay(5000).ConfigureAwait(false);
 								lock (sendMessageActionsPool) {
 									sendMessageActionsPool.Add(sendMessageAction);
 								}

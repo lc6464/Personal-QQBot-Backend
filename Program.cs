@@ -71,7 +71,7 @@ Task.Run(async () => {
 
 
 
-System.Timers.Timer timer = new() { AutoReset = true, Interval = 1000 };
+System.Timers.Timer timer = new() { Interval = 1000 };
 timer.Elapsed += (object? sender, System.Timers.ElapsedEventArgs e) => {
 	lock (MainProcesser.sendMessageActionsPool) {
 		foreach (var sendMessageAction in MainProcesser.sendMessageActionsPool) {
