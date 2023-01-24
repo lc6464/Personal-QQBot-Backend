@@ -6,7 +6,7 @@
 		<Nullable>enable</Nullable>
 		<Platforms>x64</Platforms>
 		<Copyright>Copyright © 2023 LC. All rights reserved.</Copyright>
-		<Version>1.3.2.0</Version>
+		<Version>1.3.3.0</Version>
 		<Authors>LC</Authors>
 	</PropertyGroup>
 	<ItemGroup>
@@ -22,8 +22,8 @@
 		<Using Include="System.Text" />
 		<Using Include="System.Text.Json" />
 		<Using Include="System.Text.Json.Serialization" />
-		<Using Include="System.Net.WebSockets" />
 		<Using Include="System.Net.Http.Json" />
+		<Using Include="System.Net.WebSockets" />
 		<Using Include="Microsoft.Extensions.Hosting" />
 		<Using Include="Microsoft.Extensions.Logging" />
 		<Using Include="Microsoft.Extensions.Configuration" />

@@ -51,6 +51,15 @@ public struct ReceivedMessage {
 
 	[JsonPropertyName("status")]
 	public object? Status { get; set; }
+
+	[JsonPropertyName("msg")]
+	public string? ErrorMessage { get; set; }
+
+	[JsonPropertyName("wording")]
+	public string? Wording { get; set; }
+
+	[JsonPropertyName("time")]
+	public long? Time { get; set; }
 }
 
 

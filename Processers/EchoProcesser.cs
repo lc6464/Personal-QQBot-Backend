@@ -17,7 +17,7 @@ public static class EchoProcesser {
 				_logger.LogWithTime($"发送消息成功：{message.Echo}，发送的消息的 Action：{sendMessage.Action}，Message ID: {message.Data?.MessageId}");
 				_logger.LogWithTime($"消息 {message.Data?.MessageId} 的内容：{sendMessage.Params?.Message}", LogLevel.Debug);
 			} else {
-				_logger.LogWithTime($"发送消息失败：{message.Echo}\r\nRetcode：{message.Retcode}\r\n发送的消息内容：{sendMessage.Params?.Message}", LogLevel.Error);
+				_logger.LogWithTime($"发送消息失败：{message.Echo}\r\nError Message：{message.ErrorMessage} Wording：{message.Wording} Retcode：{message.Retcode}\r\n发送的消息内容：{sendMessage.Params?.Message}", LogLevel.Error);
 			}
 			sendMessageAction.Callback?.Invoke(success, message);
 		} else {
@@ -25,7 +25,7 @@ public static class EchoProcesser {
 			if (success) {
 				_logger.LogWithTime($"发送消息成功：{message.Echo}，Message ID: {message.Data?.MessageId}，发送的消息内容已丢失。");
 			} else {
-				_logger.LogWithTime($"发送消息失败：{message.Echo}\r\nRetcode：{message.Retcode}\r\n发送的消息内容已丢失。", LogLevel.Error);
+				_logger.LogWithTime($"发送消息失败：{message.Echo}\r\nError Message：{message.ErrorMessage} Wording：{message.Wording} Retcode：{message.Retcode}\r\n发送的消息内容已丢失。", LogLevel.Error);
 			}
 		}
 	}
