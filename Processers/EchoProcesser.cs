@@ -19,7 +19,7 @@ public static class EchoProcesser {
 			} else {
 				_logger.LogWithTime($"发送消息失败：{message.Echo}\r\nError Message：{message.ErrorMessage} Wording：{message.Wording} Retcode：{message.Retcode}\r\n发送的消息内容：{sendMessage.Params?.Message}", LogLevel.Error);
 			}
-			sendMessageAction.Callback?.Invoke(success, message);
+			sendMessageAction.Callback?.Invoke(success, message, sendMessageAction);
 		} else {
 			_logger.LogWithTime($"未找到对应的发送消息动作，可能是由于超时而被移除：{message.Echo}", LogLevel.Error);
 			if (success) {

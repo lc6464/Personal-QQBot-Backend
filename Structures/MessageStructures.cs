@@ -98,13 +98,13 @@ public struct SendMessageParams {
 
 public struct SendMessageAction {
 	public SendMessageAction() { }
-	public SendMessageAction(SendMessage message, Action<bool, ReceivedMessage?>? callback = null) {
+	public SendMessageAction(SendMessage message, Action<bool, ReceivedMessage?, SendMessageAction?>? callback = null) {
 		Message = message;
 		Callback = callback;
 	}
 	public SendMessage Message { get; set; }
-	public Action<bool, ReceivedMessage?>? Callback { get; set; } = null;
+	public Action<bool, ReceivedMessage?, SendMessageAction?>? Callback { get; set; } = null;
 	public int TimeoutSecond { get; set; } = 10;
-	public Action? TimeoutCallback { get; set; } = null;
+	public Action<SendMessageAction?>? TimeoutCallback { get; set; } = null;
 	public DateTime CreatedTime { get; private init; } = DateTime.Now;
 }
