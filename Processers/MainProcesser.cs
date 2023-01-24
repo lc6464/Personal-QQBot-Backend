@@ -65,7 +65,7 @@ public static class MainProcesser {
 					}, 5, async () => {
 						_logger.LogWithTime($"回调或撤回测试：回调超时：{echo}", LogLevel.Error);
 						echo = $"{DateTime.Now.Ticks}-{message.GroupId}-{message.UserId}-{message.MessageId}-{Random.Shared.NextString(16)}";
-						messageText = $"回调超时，未在五秒内接收到响应信息！";
+						messageText = "回调超时，未在五秒内接收到响应信息！";
 						await MessageTools.SendTextMessageAsync(messageText, isGroup, isGroup ? message.GroupId : message.UserId, echo).ConfigureAwait(false);
 
 					}).ConfigureAwait(false);
