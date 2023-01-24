@@ -27,8 +27,8 @@ public static class MainProcesser {
 					biliUploaderQueryRegexMatch = Regexes.BiliUploaderQueryRegex().Match(message.RawMessage); // 获取B站UP主相关查询功能的 Match
 				}
 			}
-			
-			
+
+
 			if (aLiQueryRegexMatch.Success) {
 				// 如果是群消息且不是匿名消息，或者是私聊消息且是好友消息，且匹配到了阿梨相关查询功能的正则表达式
 				_logger.LogWithTime($"{message.GroupId} {message.UserId} 命中阿梨相关查询功能：{message.RawMessage}", LogLevel.Debug);
