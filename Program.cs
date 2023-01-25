@@ -18,7 +18,7 @@ Uri connectionUri = new(uriString);
 var ws = WebSocketProvider.WebSocket;
 
 try {
-	await ws.ConnectAsync(connectionUri, CancellationToken.None).ConfigureAwait(false);
+	await ws.ConnectAsync(connectionUri, new MyHttpMessageInvoker(), CancellationToken.None).ConfigureAwait(false);
 	programLogger.LogWithTime("已连接至 WebSocket 服务器。");
 } catch (Exception e) {
 	programLogger.LogWithTime($"连接 WebSocket 服务器失败。\r\n{e}", LogLevel.Critical);
@@ -46,7 +46,7 @@ Task.Run(async () => {
 
 		if (result.MessageType == WebSocketMessageType.Close) { // 对方关闭连接
 			programLogger.LogWithTime("连接已被关闭。", LogLevel.Critical);
-			Environment.Exit(2); // skipcq: CS-W1005
+			Environment.Exit(3); // skipcq: CS-W1005
 		} else if (result.MessageType == WebSocketMessageType.Binary) { // 直接丢弃二进制数据
 			programLogger.LogWithTime("接收到二进制数据，已丢弃。", LogLevel.Warning);
 			continue;
@@ -71,8 +71,9 @@ Task.Run(async () => {
 
 
 
-System.Timers.Timer timer = new() { Interval = 1000 };
-timer.Elapsed += (object? sender, System.Timers.ElapsedEventArgs e) => {
+System.Timers.Timer timer1s = new() { Interval = 1000 };
+
+timer1s.Elapsed += (object? sender, System.Timers.ElapsedEventArgs e) => {
 	lock (MainProcesser.sendMessageActionsPool) {
 		foreach (var sendMessageAction in MainProcesser.sendMessageActionsPool) {
 			if (sendMessageAction.CreatedTime.AddSeconds(sendMessageAction.TimeoutSecond) < DateTime.Now) {
@@ -86,13 +87,23 @@ timer.Elapsed += (object? sender, System.Timers.ElapsedEventArgs e) => {
 		}
 	}
 };
-timer.Start();
 
+timer1s.Elapsed += (object? sender, System.Timers.ElapsedEventArgs e) => {
+	if (ws.State != WebSocketState.Open) {
+		programLogger.LogWithTime("检测到 WebSocket 连接已断开，将终止应用程序。", LogLevel.Critical);
+		Environment.Exit(3); // skipcq: CS-W1005
+	}
+};
 
-
+timer1s.Start();
 
 #pragma warning restore CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
-await Host.RunAsync();
+Host.Start();
+Host.WaitForShutdown();
+
+await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, null, CancellationToken.None).ConfigureAwait(false);
+
+programLogger.LogWithTime("应用程序已安全退出。");
 
 
 
