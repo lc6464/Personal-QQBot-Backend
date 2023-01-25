@@ -18,7 +18,7 @@ Uri connectionUri = new(uriString);
 var ws = WebSocketProvider.WebSocket;
 var accessToken = WebSocketProvider.GetAccessToken();
 if (accessToken is not null) {
-	ws.Options.SetRequestHeader("Authentication", accessToken);
+	ws.Options.SetRequestHeader("Authorization", accessToken);
 }
 
 
