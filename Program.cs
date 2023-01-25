@@ -16,9 +16,14 @@ programLogger.LogWithTime("正在连接至 WebSocket 服务器。");
 Uri connectionUri = new(uriString);
 
 var ws = WebSocketProvider.WebSocket;
+var accessToken = WebSocketProvider.GetAccessToken();
+if (accessToken is not null) {
+	ws.Options.SetRequestHeader("Authentication", accessToken);
+}
+
 
 try {
-	await ws.ConnectAsync(connectionUri, new MyHttpMessageInvoker(), CancellationToken.None).ConfigureAwait(false);
+	await ws.ConnectAsync(connectionUri, CancellationToken.None).ConfigureAwait(false);
 	programLogger.LogWithTime("已连接至 WebSocket 服务器。");
 } catch (Exception e) {
 	programLogger.LogWithTime($"连接 WebSocket 服务器失败。\r\n{e}", LogLevel.Critical);

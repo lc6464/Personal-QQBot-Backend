@@ -31,9 +31,15 @@ public static class CacheProvider {
 
 
 public static class WebSocketProvider {
-	public static ClientWebSocket WebSocket { get; private set; } = new() { };
+	public static ClientWebSocket WebSocket { get; private set; } = new();
 
-	public static void RenewWebSocket() => WebSocket = new() { };
+	public static void RenewWebSocket() {
+		WebSocket = new();
+		var accessToken = GetAccessToken();
+		if (accessToken is not null) {
+			WebSocket.Options.SetRequestHeader("Authentication", accessToken);
+		}
+	}
 
 	public static string? GetAccessToken() => Program.Host?.Services.GetRequiredService<IConfiguration>().GetValue<string?>("Connection:AccessToken");
 
