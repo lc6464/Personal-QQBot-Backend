@@ -1,10 +1,8 @@
 ﻿namespace PersonalQQBotBackend.Tools;
 
 public static class Extensions {
-	public static string NextString(this Random random, int length) {
-		const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-		return new(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
-	}
+	public static string NextString(this Random random, int length) =>
+		random.NextString(length, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
 
 	public static string NextString(this Random random, int length, string chars) =>
 		new(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
