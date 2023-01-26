@@ -1,5 +1,8 @@
 ﻿namespace PersonalQQBotBackend.Processers;
 
+/// <summary>
+/// API 调用响应处理类
+/// </summary>
 public static class EchoProcesser {
 	private static readonly ILogger<Program> _logger = LoggerProvider.GetLogger<Program>();
 
