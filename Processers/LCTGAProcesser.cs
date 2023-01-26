@@ -12,7 +12,7 @@ public static class LCTGAProcesser {
 		if (isLengthFrom5To80) {
 			var match = Regexes.SetQQOnlineModelRegex().Match(message.RawMessage);
 			if (match.Success) {
-				_logger.LogWithTime($"{message.MessageId} 设置机型功能。", LogLevel.Debug);
+				_logger.LogWithTime($"{message.MessageId} 命中设置机型功能。", LogLevel.Debug);
 				var model = match.Groups[1].Value;
 				SendMessage sendMessage = new() {
 					Action = "_set_model_show",

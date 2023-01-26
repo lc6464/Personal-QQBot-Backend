@@ -9,10 +9,8 @@ public static class MainProcesser {
 
 	public static async Task ProcessReceivedMessageAsync(ReceivedMessage message) {
 		if (message.PostType == "message") {
-			_logger.LogWithTime($"接收到 {message.GroupId} {message.UserId} 的消息 {message.MessageId}：{message.RawMessage}", LogLevel.Debug);
-			
 			if (message.GetIsGroup() && message.RawMessage!.Contains("[CQ:redbag,title=")) {
-				_logger.LogWithTime($"{message.MessageId} 命中红包提醒功能。", LogLevel.Debug);
+				_logger.LogWithTime($"{message.GroupId} {message.UserId} {message.MessageId} 命中红包提醒功能：{message.RawMessage}", LogLevel.Debug);
 				await MessageTools.SendTextMessageAsync($"快到群 {message.GroupId} 中领取用户 {message.UserId} 发送的红包！", false, 1138_7791_74, message.GetEcho()).ConfigureAwait(false);
 			}
 
@@ -33,29 +31,27 @@ public static class MainProcesser {
 
 			if (aLiQueryRegexMatch.Success) {
 				// 如果是群消息且不是匿名消息，或者是私聊消息且是好友消息，且匹配到了阿梨相关查询功能的正则表达式
-				_logger.LogWithTime($"{message.MessageId} 命中阿梨相关查询功能。", LogLevel.Debug);
+				_logger.LogWithTime($"{message.GroupId} {message.UserId} {message.MessageId} 命中阿梨相关查询功能：{message.RawMessage}", LogLevel.Debug);
 				await ALiQueryProcesser.ProcessAsync(message, aLiQueryRegexMatch).ConfigureAwait(false);
 			} else if (biliUploaderQueryRegexMatch.Success) {
 				// 如果是群消息且不是匿名消息，或者是私聊消息且是好友消息，且匹配到了B站UP主相关查询功能的正则表达式
-				_logger.LogWithTime($"{message.MessageId} 命中B站UP主相关查询功能。", LogLevel.Debug);
+				_logger.LogWithTime($"{message.GroupId} {message.UserId} {message.MessageId} 命中B站UP主相关查询功能：{message.RawMessage}", LogLevel.Debug);
 				await BiliUploaderQueryProcesser.ProcessAsync(message, biliUploaderQueryRegexMatch).ConfigureAwait(false);
 			} else if (isPrivateWithFriend && message.UserId == 1138_7791_74) {
-				_logger.LogWithTime($"{message.MessageId} 命中 LC 私聊。", LogLevel.Debug);
+				_logger.LogWithTime($"{message.GroupId} {message.UserId} {message.MessageId} 命中 LC 私聊：{message.RawMessage}", LogLevel.Debug);
 				await LCPProcesser.ProcessAsync(message).ConfigureAwait(false);
 			} else if (isGroupNotAnonymous && isAted && message.GroupId == 522_071_644 && message.UserId == 1138_7791_74) {
-				_logger.LogWithTime($"{message.MessageId} 命中 LC 测试群 At。", LogLevel.Debug);
+				_logger.LogWithTime($"{message.GroupId} {message.UserId} {message.MessageId} 命中 LC 测试群 At：{message.RawMessage}", LogLevel.Debug);
 				await LCTGAProcesser.ProcessAsync(message).ConfigureAwait(false);
 			} else if (isGroupNotAnonymous && isAted && message.UserId == 1138_7791_74) {
-				_logger.LogWithTime($"{message.MessageId} 命中 LC 群聊 At。", LogLevel.Debug);
+				_logger.LogWithTime($"{message.GroupId} {message.UserId} {message.MessageId} 命中 LC 群聊 At：{message.RawMessage}", LogLevel.Debug);
 				await LCGAProcesser.ProcessAsync(message).ConfigureAwait(false);
 			} else if (isGroupNotAnonymous && isAted && message.GroupId == 522_071_644) {
-				_logger.LogWithTime($"{message.MessageId} 命中测试群 At。", LogLevel.Debug);
+				_logger.LogWithTime($"{message.GroupId} {message.UserId} {message.MessageId} 命中测试群 At：{message.RawMessage}", LogLevel.Debug);
 				await TGAProcesser.ProcessAsync(message).ConfigureAwait(false);
 			} else if ((isGroupNotAnonymous && isAted) || isPrivateWithFriend) {
-				_logger.LogWithTime($"{message.MessageId} 命中群聊 At 或好友私聊。", LogLevel.Debug);
+				_logger.LogWithTime($"{message.GroupId} {message.UserId} {message.MessageId} 命中群聊 At 或好友私聊：{message.RawMessage}", LogLevel.Debug);
 				await GNAAAndPWFProcesserProcesser.ProcessAsync(message).ConfigureAwait(false);
-			} else {
-				_logger.LogWithTime($"{message.MessageId} 未命中任何功能，已丢弃。", LogLevel.Debug);
 			}
 		} else if (message.GetIsPoked()) {
 			_logger.LogWithTime($"{message.GroupId} {message.UserId} 命中戳一戳。", LogLevel.Debug);
