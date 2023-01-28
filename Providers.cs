@@ -57,7 +57,7 @@ public static class WebSocketProvider {
 
 public static class LoggerProvider {
 	public static ILogger<Program>? ProgramLogger { get; set; }
-	
+
 	public static ILogger<T> GetLogger<T>() =>
 		Program.Host!.Services.GetRequiredService<ILogger<T>>();
 }
