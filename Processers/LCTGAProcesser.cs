@@ -10,7 +10,7 @@ public static class LCTGAProcesser {
 		var isGroup = message.GetIsGroupNotAnonymous();
 		var isLengthFrom5To80 = message.RawMessage!.Length is <= 64 and >= 5; // 判断字符数是否在5~64范围内
 		if (isLengthFrom5To80) {
-			var match = Regexes.SetQQOnlineModelRegex().Match(message.RawMessage);
+			var match = Regexes.SetQQOnlineModel().Match(message.RawMessage);
 			if (match.Success) {
 				_logger.LogWithTime($"{message.MessageId} 命中设置机型功能。", LogLevel.Debug);
 				var model = match.Groups[1].Value;

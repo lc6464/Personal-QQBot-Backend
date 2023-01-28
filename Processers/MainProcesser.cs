@@ -22,9 +22,9 @@ public static class MainProcesser {
 
 			Match aLiQueryRegexMatch = Match.Empty, biliUploaderQueryRegexMatch = Match.Empty;
 			if ((isGroupNotAnonymous || isPrivateWithFriend) && isLengthFrom8To80) {
-				aLiQueryRegexMatch = Regexes.ALiQueryRegex().Match(message.RawMessage); // 获取阿梨相关查询功能的 Match
+				aLiQueryRegexMatch = Regexes.ALiQuery().Match(message.RawMessage); // 获取阿梨相关查询功能的 Match
 				if (!aLiQueryRegexMatch.Success) {
-					biliUploaderQueryRegexMatch = Regexes.BiliUploaderQueryRegex().Match(message.RawMessage); // 获取B站UP主相关查询功能的 Match
+					biliUploaderQueryRegexMatch = Regexes.BiliUploaderQuery().Match(message.RawMessage); // 获取B站UP主相关查询功能的 Match
 				}
 			}
 

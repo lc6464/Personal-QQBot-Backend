@@ -9,7 +9,7 @@ public static class TGAProcesser {
 	public static async Task ProcessAsync(ReceivedMessage message) {
 		var isGroup = message.GetIsGroupNotAnonymous();
 		if (message.RawMessage!.Contains("回调测试") || message.RawMessage.Contains("撤回测试")) {
-			_logger.LogWithTime($"{message.GroupId} {message.UserId} 命中回调或撤回测试：{message.RawMessage}", LogLevel.Debug);
+			_logger.LogWithTime($"{message.GroupId} {message.UserId} {message.MessageId} 命中回调或撤回测试功能。", LogLevel.Debug);
 			var messageText = $"[CQ:reply,id={message.MessageId}]{(isGroup ? $" [CQ:at,qq={message.UserId}]" : "")}请等待约五秒（撤回测试可能会低于五秒）。";
 			await MessageTools.SendTextMessageAsync(messageText, isGroup, isGroup ? message.GroupId : message.UserId, message.GetEcho(),
 				async (success, callbackMessage, sendMessageAction) => {
@@ -36,9 +36,9 @@ public static class TGAProcesser {
 		}
 		var isLengthFrom18To80 = message.RawMessage.Length is <= 64 and >= 18; // 判断字符数是否在18~64范围内
 		if (isLengthFrom18To80) {
-			var match = Regexes.ParseQQFaceRegex().Match(message.RawMessage);
+			var match = Regexes.ParseQQFace().Match(message.RawMessage);
 			if (match.Success) {
-				_logger.LogWithTime($"{message.GroupId} {message.UserId} 命中QQ表情ID获取功能：{message.RawMessage}", LogLevel.Debug);
+				_logger.LogWithTime($"{message.GroupId} {message.UserId} {message.MessageId} 命中QQ表情ID获取功能。", LogLevel.Debug);
 				await MessageTools.SendTextMessageAsync($"[CQ:reply,id={message.MessageId}]{(isGroup ? $" [CQ:at,qq={message.UserId}]" : "")}您提供的QQ表情ID为：{match.Groups[1].Value}", isGroup, isGroup ? message.GroupId : message.UserId, message.GetEcho()).ConfigureAwait(false);
 				return;
 			}
@@ -47,6 +47,6 @@ public static class TGAProcesser {
 
 
 		_logger.LogWithTime($"{message.MessageId} 未命中任何功能，转到 群聊非匿名 At 及好友私聊处理类。", LogLevel.Debug);
-		await GNAAAndPWFProcesserProcesser.ProcessAsync(message).ConfigureAwait(false);
+		await GeneralProcesser.ProcessAsync(message).ConfigureAwait(false);
 	}
 }
