@@ -4,7 +4,7 @@
 /// LC 测试群 At 处理类
 /// </summary>
 public static class LCTGAProcesser {
-	private static readonly ILogger<Program> _logger = LoggerProvider.GetLogger<Program>();
+	private static readonly ILogger<Program> _logger = LoggerProvider.ProgramLogger!;
 
 	public static async Task ProcessAsync(ReceivedMessage message) {
 		var isGroup = message.GetIsGroupNotAnonymous();

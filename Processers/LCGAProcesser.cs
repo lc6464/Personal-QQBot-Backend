@@ -4,7 +4,7 @@
 /// LC 群聊 At 处理类
 /// </summary>
 public static class LCGAProcesser {
-	private static readonly ILogger<Program> _logger = LoggerProvider.GetLogger<Program>();
+	private static readonly ILogger<Program> _logger = LoggerProvider.ProgramLogger!;
 
 	public static async Task ProcessAsync(ReceivedMessage message) {
 

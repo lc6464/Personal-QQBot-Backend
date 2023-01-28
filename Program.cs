@@ -1,6 +1,6 @@
 ﻿Host = Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args).Build();
 var config = Host.Services.GetRequiredService<IConfiguration>();
-var programLogger = Host.Services.GetRequiredService<ILogger<Program>>();
+var programLogger = LoggerProvider.ProgramLogger = LoggerProvider.GetLogger<Program>();
 
 programLogger.LogWithTime("欢迎使用 LC 的个人 QQ 机器人后端。");
 
@@ -16,10 +16,7 @@ programLogger.LogWithTime("正在连接至 WebSocket 服务器。");
 Uri connectionUri = new(uriString);
 
 var ws = WebSocketProvider.WebSocket;
-var accessToken = WebSocketProvider.GetAccessToken();
-if (accessToken is not null) {
-	ws.Options.SetRequestHeader("Authorization", accessToken);
-}
+WebSocketProvider.InitializeWebSocket();
 
 
 try {
@@ -30,15 +27,14 @@ try {
 	Environment.Exit(1); // skipcq: CS-W1005
 }
 
-var isLogReceivedEvent = config.GetValue<bool>("Log:ReceivedEvent");
-var tooLongMessage = false;
-
 
 #pragma warning disable CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
 Task.Run(async () => {
+	var tooLongMessage = false;
+	var isLogReceivedEvent = config.GetValue<bool>("Log:ReceivedEvent");
 	while (true) {
-		var buffer = new byte[524288]; // 512KB 缓冲区
-		var result = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None).ConfigureAwait(false);
+		var buffer = new Memory<byte>(new byte[524288]); // 512KB 缓冲区
+		var result = await ws.ReceiveAsync(buffer, CancellationToken.None).ConfigureAwait(false);
 
 		if (!result.EndOfMessage) { // 直接丢弃过长的消息
 			tooLongMessage = true;
@@ -58,16 +54,16 @@ Task.Run(async () => {
 		}
 
 		try { // 尝试解析数据并处理消息
-			var message = JsonSerializer.Deserialize<ReceivedMessage>(buffer.AsSpan(..result.Count));
+			var message = JsonSerializer.Deserialize<ReceivedMessage>(buffer.Span[..result.Count]);
 
 			if (isLogReceivedEvent && message.MetaEventType != "heartbeat") {
-				var messageString = Encoding.UTF8.GetString(buffer.AsSpan(..result.Count));
+				var messageString = Encoding.UTF8.GetString(buffer.Span[..result.Count]);
 				programLogger.LogWithTime($"接收到事件：{messageString}", LogLevel.Debug);
 			}
 
 			_ = MainProcesser.ProcessReceivedMessageAsync(message); // 异步处理消息（不等待）
 		} catch (Exception e) {
-			var messageString = Encoding.UTF8.GetString(buffer.AsSpan(..result.Count));
+			var messageString = Encoding.UTF8.GetString(buffer.Span[..result.Count]);
 			programLogger.LogWithTime($"无法解析接收到的数据：{messageString}\r\n{e}", LogLevel.Error);
 		}
 	}

@@ -3,7 +3,7 @@
 namespace PersonalQQBotBackend.Processers;
 
 public static class MainProcesser {
-	private static readonly ILogger<Program> _logger = LoggerProvider.GetLogger<Program>();
+	private static readonly ILogger<Program> _logger = LoggerProvider.ProgramLogger!;
 
 	public static readonly List<SendMessageAction> sendMessageActionsPool = new();
 

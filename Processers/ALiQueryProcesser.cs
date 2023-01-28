@@ -3,7 +3,7 @@
 namespace PersonalQQBotBackend.Processers;
 
 public static class ALiQueryProcesser {
-	private static readonly ILogger<Program> _logger = LoggerProvider.GetLogger<Program>();
+	private static readonly ILogger<Program> _logger = LoggerProvider.ProgramLogger!;
 
 	public static async Task ProcessAsync(ReceivedMessage message, System.Text.RegularExpressions.Match aLiQueryRegexMatch) {
 		var echo = $"{DateTime.Now.Ticks}-{message.GroupId}-{message.UserId}-{message.MessageId}-{Random.Shared.NextString(16)}";

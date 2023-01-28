@@ -33,12 +33,16 @@ public static class CacheProvider {
 public static class WebSocketProvider {
 	public static ClientWebSocket WebSocket { get; private set; } = new();
 
-	public static void RenewWebSocket() {
-		WebSocket = new();
+	public static void InitializeWebSocket() {
 		var accessToken = GetAccessToken();
 		if (accessToken is not null) {
-			WebSocket.Options.SetRequestHeader("Authentication", accessToken);
+			WebSocket.Options.SetRequestHeader("Authorization", accessToken);
 		}
+	}
+
+	public static void RenewWebSocket() {
+		WebSocket = new();
+		InitializeWebSocket();
 	}
 
 	public static string? GetAccessToken() => Program.Host?.Services.GetRequiredService<IConfiguration>().GetValue<string?>("Connection:AccessToken");
@@ -52,6 +56,8 @@ public static class WebSocketProvider {
 
 
 public static class LoggerProvider {
+	public static ILogger<Program>? ProgramLogger { get; set; }
+	
 	public static ILogger<T> GetLogger<T>() =>
 		Program.Host!.Services.GetRequiredService<ILogger<T>>();
 }
