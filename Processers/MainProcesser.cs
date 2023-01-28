@@ -51,7 +51,7 @@ public static class MainProcesser {
 				await TGAProcesser.ProcessAsync(message).ConfigureAwait(false);
 			} else if ((isGroupNotAnonymous && isAted) || isPrivateWithFriend) {
 				_logger.LogWithTime($"{message.GroupId} {message.UserId} {message.MessageId} 命中群聊 At 或好友私聊：{message.RawMessage}", LogLevel.Debug);
-				await GNAAAndPWFProcesserProcesser.ProcessAsync(message).ConfigureAwait(false);
+				await GeneralProcesser.ProcessAsync(message).ConfigureAwait(false);
 			}
 		} else if (message.GetIsPoked()) {
 			_logger.LogWithTime($"{message.GroupId} {message.UserId} 命中戳一戳。", LogLevel.Debug);
