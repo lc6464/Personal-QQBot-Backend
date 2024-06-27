@@ -36,7 +36,7 @@ public static class WebSocketProvider {
 	public static void InitializeWebSocket() {
 		var accessToken = GetAccessToken();
 		if (accessToken is not null) {
-			WebSocket.Options.SetRequestHeader("Authorization", accessToken);
+			WebSocket.Options.SetRequestHeader("Authorization", $"Bearer {accessToken}");
 		}
 	}
 

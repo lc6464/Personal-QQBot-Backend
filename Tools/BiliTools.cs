@@ -37,8 +37,8 @@ public static class BiliTools {
 
 
 	public static async Task<BiliApiSpaceInfo> GetBiliApiUserSpaceInfoAsync(long uid) =>
-		await HttpClientProvider.client.GetFromJsonAsync<BiliApiSpaceInfo>($"https://api.bilibili.com/x/space/acc/info?mid={uid}").ConfigureAwait(false);
+		await HttpClientProvider.client.GetFromJsonAsync<BiliApiSpaceInfo>($"https://api.bilibili.com/x/space/wbi/acc/info?mid={uid}").ConfigureAwait(false);
 
 	public static async Task<BiliApiUploaderVideosInfo> GetBiliApiUploaderVideosInfoAsync(long uid, int pageNumber = 1, int pageSize = 1) =>
-		await HttpClientProvider.client.GetFromJsonAsync<BiliApiUploaderVideosInfo>($"https://api.bilibili.com/x/space/arc/search?mid={uid}&ps={pageSize}&pn={pageNumber}").ConfigureAwait(false);
+		await HttpClientProvider.client.GetFromJsonAsync<BiliApiUploaderVideosInfo>($"https://api.bilibili.com/x/space/wbi/arc/search?mid={uid}&ps={pageSize}&pn={pageNumber}").ConfigureAwait(false);
 }

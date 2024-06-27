@@ -5,7 +5,7 @@ namespace PersonalQQBotBackend.Processers;
 public static class MainProcesser {
 	private static readonly ILogger<Program> _logger = LoggerProvider.ProgramLogger!;
 
-	public static readonly List<SendMessageAction> sendMessageActionsPool = new();
+	public static readonly List<SendMessageAction> sendMessageActionsPool = [];
 
 	public static async Task ProcessReceivedMessageAsync(ReceivedMessage message) {
 		if (message.PostType == "message") {
